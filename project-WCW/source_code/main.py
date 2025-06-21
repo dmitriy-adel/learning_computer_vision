@@ -1,8 +1,11 @@
 import cv2
 
+from models_usage import ObjectClassificationModel
+
 
 class WebCameraViewer:
     def __init__(self):
+        self.object_classification_model: ObjectClassificationModel = ObjectClassificationModel()
         self.web_camera_capture: cv2.VideoCapture = None
         self.capture_web_camera()
 
@@ -25,6 +28,7 @@ class WebCameraViewer:
                 print("[WebCameraViewer->read_web_camera_image]. cant get web camera frame")
                 continue
             
+            frame = self.object_classification_model.classify_image(frame=frame)
             cv2.imshow("Webcam", frame)
             
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -38,3 +42,5 @@ class WebCameraViewer:
 if __name__ == '__main__':
     wcv_capture: WebCameraViewer = WebCameraViewer()
     wcv_capture.run()
+
+    cv2.destroyAllWindows()
